@@ -4,7 +4,15 @@ project(mobro)
 find_package(catkin REQUIRED COMPONENTS
   nav_msgs
   sensor_msgs
+  dynamic_reconfigure
 )
+
+generate_dynamic_reconfigure_options(
+  control/Gains.cfg
+)
+
+
+
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES mobro

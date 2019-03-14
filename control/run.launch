@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<launch>
+    <arg name="robot" default="r2d2"/>
+    <param name="use_gui" value="True"/>
+    
+    <param name="robot_description" command="$(find xacro)/xacro $(find mobro)/control/urdf/$(arg robot).urdf"/>
+
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher"/>
+<!-- <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"/> -->
+    
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find mobro)/control/config.rviz" />
+    
+    <node name="simulator" pkg="mobro" type="sim.py" args="$(arg robot)" respawn="true" output="screen"/>
+    
+<!--     <node name="controller" pkg="mobro" type="control.py" args="$(arg robot)" respawn="true" output="screen"/> -->
+</launch>

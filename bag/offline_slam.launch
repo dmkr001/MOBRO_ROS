@@ -15,7 +15,10 @@
 -->
 
 <launch>
-  <param name="/use_sim_time" value="true" />
+  <arg name="res" default="0.05"/>
+
+  <param name="/use_sim_time" value="false" />
+  
 
   <param name="robot_description" command="$(find xacro)/xacro $(find turtlebot3_description)/urdf/turtlebot3_burger.urdf.xacro"/>
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher"/>
@@ -28,10 +31,11 @@
   </node>
 
   <node name="cartographer_occupancy_grid_node" pkg="cartographer_ros"
-      type="cartographer_occupancy_grid_node" args="-resolution 0.05" />
+      type="cartographer_occupancy_grid_node" args="-resolution $(arg res)" />
 
   <node name="rviz" pkg="rviz" type="rviz" required="true"
       args="-d $(find cartographer_ros)/configuration_files/demo_3d.rviz" />
   <node name="playbag" pkg="rosbag" type="play"
-      args="--clock $(find mobro)/bag/house.bag" />
+      args="--clock $(find mobro)/bag/house.bag -k" />
+  
 </launch>

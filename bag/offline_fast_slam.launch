@@ -1,5 +1,7 @@
 <launch>
-  <param name="/use_sim_time" value="true" />
+  <arg name="res" default="0.05"/>
+  
+  <param name="/use_sim_time" value="false" />
   
    <param name="robot_description" command="$(find xacro)/xacro $(find turtlebot3_description)/urdf/turtlebot3_burger.urdf.xacro"/>
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher"/>
@@ -16,5 +18,5 @@
   </node>
 
   <node name="cartographer_occupancy_grid_node" pkg="cartographer_ros"
-      type="cartographer_occupancy_grid_node" args="-resolution 0.05" />
+      type="cartographer_occupancy_grid_node" args="-resolution $(arg res)" />
 </launch>
