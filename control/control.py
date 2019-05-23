@@ -176,7 +176,7 @@ class Robot:
                                xy[1,0] - self.xy[1,0],
                                toPi(theta_goal - self.theta)]
 
-                xy_err = xy - self.xy - L*np.matrix([[c],[s]])
+                xy_err = xy - self.xy # - L*np.matrix([[c],[s]])
                 xe = (np.matrix([[c,s]]) * xy_err)[0,0]
                 ye = (np.matrix([[-s,c]]) * xy_err)[0,0]
                 te = toPi(theta_goal - self.theta - beta)

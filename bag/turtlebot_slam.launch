@@ -1,0 +1,26 @@
+<!-- -->
+<launch>
+
+<!-- mapping params -->
+ <arg name="res" default="0.05"/>
+ <arg name="fast" default="true"/>
+ <arg name="file" default="test1"/>
+
+ <!-- map saver params -->
+ <arg name="occ" default="65"/>
+ <arg name="free" default="2"/> 
+ 
+  <include file="$(find mobro)/bag/offline_slam.launch">
+  
+        <arg name="res" value="$(arg res)"/>
+        <arg name="config" value="turtlebot_urg_lidar_2d"/>
+        <arg name="fast" value="$(arg fast)"/>
+        <arg name="file" value="$(arg file)"/>
+        <arg name="robot" default="$(find turtlebot_description)/robots/kobuki_hexagons_hokuyo.urdf.xacro"/>
+        
+        <!-- map saver params -->
+        <arg name="occ" value="$(arg occ)"/>
+        <arg name="free" value="$(arg free)"/> 
+    </include>
+      
+</launch>

@@ -1,0 +1,26 @@
+<!-- -->
+<launch>
+
+<!-- mapping params -->
+ <arg name="res" default="0.05"/>
+ <arg name="fast" default="true"/>
+ <arg name="file" default="house"/>
+
+ <!-- map saver params -->
+ <arg name="occ" default="65"/>
+ <arg name="free" default="2"/> 
+ 
+  <include file="$(find mobro)/bag/offline_slam.launch">
+  
+        <arg name="res" value="$(arg res)"/>
+        <arg name="config" value="turtlebot3_lds_2d_gazebo"/>
+        <arg name="fast" value="$(arg fast)"/>
+        <arg name="file" value="$(arg file)"/>
+        <arg name="robot" default="$(find turtlebot3_description)/urdf/turtlebot3_burger.urdf.xacro"/>
+        
+        <!-- map saver params -->
+        <arg name="occ" value="$(arg occ)"/>
+        <arg name="free" value="$(arg free)"/> 
+    </include>
+      
+</launch>

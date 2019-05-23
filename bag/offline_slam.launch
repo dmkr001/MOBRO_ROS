@@ -1,41 +1,55 @@
-<!--
-  Copyright 2016 The Cartographer Authors
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
--->
-
+<!-- -->
 <launch>
-  <arg name="res" default="0.05"/>
+
+<!-- mapping params -->
+ <arg name="res" default="0.05"/>
+ <arg name="config" default="turtlebot3_lds_2d_gazebo"/>
+ <arg name="fast" default="true"/>
+ <arg name="file" default="house"/>
+ <arg name="robot" default="$(find turtlebot3_description)/urdf/turtlebot3_burger.urdf.xacro"/>
+ 
+ <!-- map saver params -->
+ <arg name="occ" default="65"/>
+ <arg name="free" default="2"/> 
 
   <param name="/use_sim_time" value="false" />
   
-
-  <param name="robot_description" command="$(find xacro)/xacro $(find turtlebot3_description)/urdf/turtlebot3_burger.urdf.xacro"/>
+   <param name="robot_description" command="$(find xacro)/xacro $(arg robot)"/>
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher"/>
- 
-  <node name="cartographer_node" pkg="cartographer_ros"
-      type="cartographer_node" args="
-          -configuration_directory $(find mobro)/config
-          -configuration_basename turtlebot3_lds_2d_gazebo.lua"
-      output="screen">
-  </node>
-
-  <node name="cartographer_occupancy_grid_node" pkg="cartographer_ros"
-      type="cartographer_occupancy_grid_node" args="-resolution $(arg res)" />
 
   <node name="rviz" pkg="rviz" type="rviz" required="true"
       args="-d $(find cartographer_ros)/configuration_files/demo_3d.rviz" />
-  <node name="playbag" pkg="rosbag" type="play"
-      args="--clock $(find mobro)/bag/house.bag -k" />
+      
+    <group if="$(arg fast)">
+    
+      <node name="cartographer_offline_node" pkg="cartographer_ros"
+      type="cartographer_offline_node" args="
+          -configuration_directory $(find mobro)/config
+          -configuration_basenames $(arg config).lua
+          -bag_filenames $(find mobro)/bag/$(arg file).bag"
+      output="screen">
+  </node>
   
+    </group>
+    
+    
+    <group unless="$(arg fast)">
+    
+      <node name="cartographer_node" pkg="cartographer_ros"
+      type="cartographer_node" args="
+          -configuration_directory $(find mobro)/config
+          -configuration_basename $(arg config).lua"
+      output="screen">
+  </node>
+      
+  <node name="playbag" pkg="rosbag" type="play"
+      args="--clock $(find mobro)/bag/$(arg file).bag -k" />
+    </group>
+      
+  <node name="cartographer_occupancy_grid_node" pkg="cartographer_ros"
+      type="cartographer_occupancy_grid_node" args="-resolution $(arg res)" />
+      
+    <node name="map_saver_trigger" pkg="mobro" type="map_saver" output="screen"
+    args="'--occ $(arg occ) --free $(arg free) -f $(find mobro)/maps/$(arg file)'"/>
+      
 </launch>

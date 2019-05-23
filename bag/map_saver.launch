@@ -1,9 +1,0 @@
-<launch>
-
- <arg name="occ" default="65"/>
- <arg name="free" default="2"/>
- <arg name="file" default="house"/>
- 
-  <node name="map_saver" pkg="map_server" type="map_saver" output="screen"
-    args="--occ $(arg occ) --free $(arg free) -f $(find mobro)/maps/$(arg file)"/>
-</launch>
